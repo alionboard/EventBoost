@@ -1,5 +1,4 @@
 ﻿using EventBoost.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace EventBoost.Areas.Admin.Controllers
 {
-    
-    public class DashboardController : AdminBaseController
+    public class EventsController : AdminBaseController
     {
-        public DashboardController(ApplicationDbContext dbContext) : base(dbContext)
+        public EventsController(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_db.Meetings.ToList());
         }
     }
 }
