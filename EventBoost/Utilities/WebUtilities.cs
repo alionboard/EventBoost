@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EventBoost.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,14 @@ namespace EventBoost.Utilities
         {
             var ext = Path.GetExtension(formFile.FileName);
             return Guid.NewGuid().ToString() + ext;
+        }
+
+        public static void DeletePhoto(this Meeting meeting)
+        {
+            if (string.IsNullOrEmpty(meeting.PhotoPath))
+                return;
+
+
         }
     }
 }

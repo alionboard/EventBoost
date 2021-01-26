@@ -1,5 +1,6 @@
 ﻿using EventBoost.Data;
 using EventBoost.Models;
+using EventBoost.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,10 +30,16 @@ namespace EventBoost
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Uygulamada sadece bir adet HelperService örneği oluşur ve hep o kullanılır.
+            services.AddSingleton<HelperService>();
+            //transient using gibi
+            //scope bazlı servis: her istek için yeni dbcontext oluşur.
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
+
+
 
         //https://github.com/dotnet-architecture/eShopOnWeb
 

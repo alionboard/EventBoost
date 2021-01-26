@@ -1,6 +1,7 @@
 ﻿using EventBoost.Areas.Admin.Models;
 using EventBoost.Data;
 using EventBoost.Models;
+using EventBoost.Services;
 using EventBoost.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +16,11 @@ namespace EventBoost.Areas.Admin.Controllers
     [AutoValidateAntiforgeryToken]
     public class EventsController : AdminBaseController
     {
-        public EventsController(ApplicationDbContext dbContext) : base(dbContext)
+        private readonly HelperService helperService;
+
+        public EventsController(ApplicationDbContext dbContext,HelperService helperService) : base(dbContext)
         {
+            this.helperService = helperService;
         }
 
         public IActionResult Index()
@@ -42,7 +46,8 @@ namespace EventBoost.Areas.Admin.Controllers
                 {
                     fileName = vm.Photo.GenerateFileName();
                     var savePath = Path.Combine(env.WebRootPath, "img", fileName);
-                    vm.Photo.CopyTo(new FileStream(savePath, FileMode.Create));
+                    using FileStream fs = new FileStream(savePath, FileMode.Create);
+                    vm.Photo.CopyTo(fs);
                 }
                 var meeting = new Meeting()
                 {
@@ -92,7 +97,8 @@ namespace EventBoost.Areas.Admin.Controllers
                 {
                     fileName = vm.Photo.GenerateFileName();
                     var savePath = Path.Combine(env.WebRootPath, "img", fileName);
-                    vm.Photo.CopyTo(new FileStream(savePath, FileMode.Create));
+                    using FileStream fs = new FileStream(savePath, FileMode.Create);
+                    vm.Photo.CopyTo(fs);
                 }
                 var meeting = _db.Meetings.Find(vm.Id);
                 meeting.MeetingTime = vm.MeetingTime;
@@ -101,7 +107,7 @@ namespace EventBoost.Areas.Admin.Controllers
                 meeting.Title = vm.Title;
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    //todo: mevcut resim varsa sil
+                    helperService.DeletePhoto(meeting.PhotoPath);
                     meeting.PhotoPath = fileName;
                 }
                 _db.SaveChanges();
@@ -119,6 +125,8 @@ namespace EventBoost.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+
+            helperService.DeletePhoto(meeting.PhotoPath);
 
             _db.Remove(meeting);
             _db.SaveChanges();

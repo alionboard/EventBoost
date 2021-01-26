@@ -24,6 +24,7 @@
     font-style: normal;
     font-family: "Font Awesome 5 Free";
     font-size: 44px;
+    background-color:var(--light);
     color: var(--gray);
 }
 
