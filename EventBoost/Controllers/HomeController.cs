@@ -23,7 +23,7 @@ namespace EventBoost.Controllers
 
         public IActionResult Index()
         {
-            var meetings = _db.Meetings.OrderBy(x => x.MeetingTime).ToList();
+            var meetings = _db.Meetings.OrderByDescending(x => x.MeetingTime).ToList();
             return View(meetings);
         }
 

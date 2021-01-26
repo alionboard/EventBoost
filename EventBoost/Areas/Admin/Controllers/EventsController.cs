@@ -109,5 +109,22 @@ namespace EventBoost.Areas.Admin.Controllers
             }
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var meeting = _db.Meetings.Find(id);
+
+            if (meeting == null)
+            {
+                return NotFound();
+            }
+
+            _db.Remove(meeting);
+            _db.SaveChanges();
+
+            return Json(new { success = true });
+
+        }
     }
 }

@@ -1,6 +1,10 @@
-﻿@model List<Meeting> 
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery Antiforgery
+@model List<Meeting>
 @{
     ViewBag.Title = "Events";
+    var tokenName = Antiforgery.GetTokens(Context).FormFieldName;
+    var tokenValue = Antiforgery.GetTokens(Context).RequestToken;
 }
 
 <div class="card">
@@ -25,30 +29,68 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td><img src="~/img/@item.PhotoPath" alt="@item.Title" width="100"/></td>
+                        <td>
+                            @if (string.IsNullOrEmpty(item.PhotoPath))
+                            {
+                                <i class="no-image"></i>
+                            }
+                            else
+                            {
+                                <img src="~/img/@item.PhotoPath" alt="@item.Title" width="100" />
+                            }
+                        </td>
+
                         <td>@item.Title</td>
                         <td>@item.Description</td>
                         <td>@item.Place</td>
                         <td>@item.MeetingTime</td>
-                        <td><a asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a href="#" data-delete-id="@item.Id" data-delete-title="@item.Title">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>
-            
+
         </table>
     </div>
     <!-- /.card-body -->
 </div>
 
-    @section scripts{
-        <script>
+@section scripts{
+    <script>
             $(function () {
-                $("#dataTable").DataTable({
+
+                var table = $("#dataTable").DataTable({
                     "responsive": true, "lengthChange": false, "autoWidth": false,
                     "buttons": ["copy", "excel", "pdf", "colvis"]
-                }).buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
+                });
 
+                table.buttons().container().appendTo('#dataTable_wrapper .col-md-6:eq(0)');
                 $("#linkNew").prependTo("#dataTable_wrapper .dt-buttons");
-                
-            });</script>
-    }
+
+            $("body").on("click", "[data-delete-id]", function () {
+                event.preventDefault();
+
+                var id = $(this).data("delete-id");
+                var title = $(this).data("delete-title");
+                var tr = $(this).closest("tr");
+
+
+                if (confirm('Are you sure to delete the meeting "' + title + '"?')) {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("Delete")",
+                        data: {"@tokenName":"@tokenValue", id: id },
+                        success: function (data) {
+                            alert("Event Deleted");
+                            table.row(tr).remove().draw();
+                        }
+
+                    });
+                }
+
+            });
+            });
+    </script>
+}
