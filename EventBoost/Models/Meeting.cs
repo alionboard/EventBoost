@@ -15,6 +15,6 @@ namespace EventBoost.Models
         public DateTime? MeetingTime { get; set; }
         public string Place { get; set; }
         public string PhotoPath { get; set; }
-        public ICollection<ApplicationUser> Participants { get; set; }
+        public ICollection<ApplicationUser> Participants { get; set; } = new HashSet<ApplicationUser>();
     }
 }

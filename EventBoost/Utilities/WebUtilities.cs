@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EventBoost.Utilities
@@ -20,8 +21,11 @@ namespace EventBoost.Utilities
         {
             if (string.IsNullOrEmpty(meeting.PhotoPath))
                 return;
+        }
 
-
+        public static string Id(this ClaimsPrincipal user)
+        {
+            return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }

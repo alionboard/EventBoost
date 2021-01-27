@@ -1,4 +1,4 @@
-﻿@model List<Meeting>
+﻿@model List<MeetingViewModel>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -11,11 +11,11 @@
     @foreach (var meeting in Model)
     {
         <div class="col-lg-6">
-            <div class="card flex-row-reverse mb-3">
+
+            <div class="card card-meeting flex-row-reverse mb-3">
                 @if (string.IsNullOrEmpty(meeting.PhotoPath))
                 {
                     <img src="~/img/noimage.png" class="meeting-img" alt="@meeting.Title">
-
                 }
                 else
                 {
@@ -23,15 +23,61 @@
                 }
                 <div class="card-body">
                     <h5 class="card-title">@meeting.Title</h5>
-                    <p class="card-text meeting-desc">
+                    <p class="card-text meeting-desc mb-1">
                         @meeting.Description<br />
                     </p>
                     <p class="card-text">
-                        <strong>Place: </strong>@meeting.Place
+                        <strong>Place: </strong>@meeting.Place <br />
                         <strong>Date: </strong>@meeting.MeetingTime
                     </p>
+                    <form class="frmJoin" asp-antiforgery="true">
+                        <input type="hidden" name="meetingId" value="@meeting.Id" />
+                        @if (meeting.IsJoined)
+                        {
+                            <button class="btn btn-success"><i class="fas fa-check"></i><span> Joined</span></button>
+
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary"><i class="fas fa-plus"></i><span> Join</span></button>
+
+                        }
+                    </form>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@section scripts{
+    <script>
+            var isAuthenticated = @(User.Identity.IsAuthenticated ? "true" : "false");
+            $("form.frmJoin").submit(function (event) {
+                event.preventDefault();
+                var frm = this;
+                if (isAuthenticated) {
+                    $.ajax({
+                        type: "post",
+                        url: "@Url.Action("JoinMeeting","Home")",
+                        data: $(frm).serialize(),
+                        success: function (data) {
+                            if (data.result == "joined") {
+                                $(frm).find("button").removeClass("btn-primary").addClass("btn-success");
+                                $(frm).find("span").text(" Joined");
+                                $(frm).find("button i").removeClass("fa-plus").addClass("fa-check");
+                            }
+                            else {
+                                $(frm).find("button").addClass("btn-primary").removeClass("btn-success");
+                                $(frm).find("span").text(" Join");
+                                $(frm).find("button i").addClass("fa-plus").removeClass("fa-check");
+                            }
+                        }
+                    })
+
+                }
+                else {
+                    location.href = "@Url.Page("/Account/Login",new { area = "Identity" })";
+                }
+            });
+    </script>
+}
