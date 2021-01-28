@@ -58,6 +58,7 @@ namespace EventBoost.Data
                 if (env.IsDevelopment())
                 {
                     SeedMeetings(db);
+                    SeedMeetings(db,121);
                 }
 
             }
@@ -86,6 +87,23 @@ namespace EventBoost.Data
                 });
                 db.SaveChanges();
             }
+        }
+
+        private static void SeedMeetings(ApplicationDbContext db, int count)
+        {
+            int currentCount = db.Meetings.Count();
+            for (int i = currentCount+1; i <= count; i++)
+            {
+                db.Meetings.Add(new Meeting()
+                {
+                    Title = "Meeting "+i,
+                    Description = "Ajgfjklsdfjk sdffjjk  dfjöghjksdfghksdfjlghskl hdfjkghsdjklf ghsdf gjdgh jksdfhkj",
+                    Place = "Darl, LA",
+                    MeetingTime = DateTime.Now.AddDays(-i),
+                });
+                db.SaveChanges();
+            }
+
         }
     }
 }

@@ -18,6 +18,7 @@ namespace EventBoost.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _db;
+        const int PageSize = 10;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext applicationDbContext)
         {
@@ -25,8 +26,11 @@ namespace EventBoost.Controllers
             _db = applicationDbContext;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
+            var totalItemsCount = _db.Meetings.Count();
+            var pageCount = (int)Math.Ceiling((double)totalItemsCount / PageSize);
+
             var loggedIn = User.Identity.IsAuthenticated;
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var meetings = _db.Meetings.
@@ -40,8 +44,24 @@ namespace EventBoost.Controllers
                     PhotoPath = x.PhotoPath,
                     Place = x.Place,
                     IsJoined = loggedIn && x.Participants.Any(p => p.Id == userId)
-                }).ToList();
-            return View(meetings);
+                }).
+                Skip((page - 1) * PageSize).
+                Take(PageSize).
+                ToList();
+
+            var vm = new HomeViewModel
+            {
+                Meetings = meetings,
+                ItemsCount = meetings.Count,
+                TotalItemsCount= totalItemsCount,
+                PageCount = pageCount,
+                PageSize = PageSize,
+                Page = page,
+                IsPrevious = page > 1,
+                IsNext = page < pageCount
+            };
+
+            return View(vm);
         }
 
         public IActionResult Privacy()
@@ -77,7 +97,7 @@ namespace EventBoost.Controllers
 
             return Json(new { result });
         }
-        
+
         [Authorize]
         [HttpGet]
         public IActionResult MyMeetings()
