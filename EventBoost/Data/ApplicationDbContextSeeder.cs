@@ -52,6 +52,7 @@ namespace EventBoost.Data
 
                 var env = serviceProvider.GetRequiredService<IHostEnvironment>();
                 var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
+                db.Database.Migrate();
 
                 await SeedRolesAndUsersAsync(roleManager, userManager);
 
