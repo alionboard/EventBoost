@@ -15,8 +15,13 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label asp-for="Title"></label>
-                        <input asp-for="Title" class="form-control" placeholder="Title">
+                        <input asp-for="Title" class="form-control" placeholder="Title" data-slugify-target="#Slug"/>
                         <span asp-validation-for="Title"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Slug"></label>
+                        <input asp-for="Slug" class="form-control" placeholder="Short URL">
+                        <span asp-validation-for="Slug"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Description"></label>
@@ -45,11 +50,11 @@
                     <div class="form-group">
                         <label for="exampleInputFile">File input</label>
                         <div>
-                           <input type="hidden" asp-for="ExistingPhotoPath"/>
+                            <input type="hidden" asp-for="ExistingPhotoPath" />
                             @{string showPreview = string.IsNullOrEmpty(Model.ExistingPhotoPath) ? "display:none" : ""; }
 
                             <img src="~/img/@Model.ExistingPhotoPath" alt="@Model.Title" height="100" class="edit-meeting-photo-preview img-thumbnail mb-2" id="img-preview" style="@showPreview" />
-                            
+
                         </div>
                         <div class="input-group">
 

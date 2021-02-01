@@ -41,7 +41,7 @@ namespace EventBoost
 
 
 
-        //https://github.com/dotnet-architecture/eShopOnWeb
+            //https://github.com/dotnet-architecture/eShopOnWeb
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
@@ -78,13 +78,19 @@ namespace EventBoost
 
             app.UseEndpoints(endpoints =>
             {
-            //https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/areas?view=aspnetcore-5.0
+                //https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/areas?view=aspnetcore-5.0
 
                 endpoints.MapAreaControllerRoute(
                   name: "adminRoute",
-                  areaName:"Admin",
+                  areaName: "Admin",
                   pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}"
                 );
+
+                //endpoints.MapControllerRoute(
+                //    name: "meetingsRoute",
+                //    pattern: "MyMeetings",
+                //    defaults: new { controller = "Home", action = "MyMeetings" });
+
 
                 endpoints.MapControllerRoute(
                     name: "default",

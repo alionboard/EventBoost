@@ -39,6 +39,7 @@ namespace EventBoost.Controllers
                 {
                     Id = x.Id,
                     Title = x.Title,
+                    Slug=x.Slug,
                     Description = x.Description,
                     MeetingTime = x.MeetingTime,
                     PhotoPath = x.PhotoPath,
@@ -64,6 +65,8 @@ namespace EventBoost.Controllers
             return View(vm);
         }
 
+        //https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-5.0
+        [Route("Privacy")]
         public IActionResult Privacy()
         {
             return View();
@@ -100,6 +103,7 @@ namespace EventBoost.Controllers
 
         [Authorize]
         [HttpGet]
+        [Route("MyMeetings")]
         public IActionResult MyMeetings()
         {
             var userId = User.Id();

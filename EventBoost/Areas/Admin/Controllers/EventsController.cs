@@ -18,7 +18,7 @@ namespace EventBoost.Areas.Admin.Controllers
     {
         private readonly HelperService helperService;
 
-        public EventsController(ApplicationDbContext dbContext,HelperService helperService) : base(dbContext)
+        public EventsController(ApplicationDbContext dbContext, HelperService helperService) : base(dbContext)
         {
             this.helperService = helperService;
         }
@@ -52,6 +52,7 @@ namespace EventBoost.Areas.Admin.Controllers
                 var meeting = new Meeting()
                 {
                     Title = vm.Title,
+                    Slug = WebUtilities.URLFriendly(vm.Slug),
                     Description = vm.Description,
                     MeetingTime = vm.MeetingTime,
                     Place = vm.Place,
@@ -78,6 +79,7 @@ namespace EventBoost.Areas.Admin.Controllers
             {
                 Id = meeting.Id,
                 Title = meeting.Title,
+                Slug = meeting.Slug,
                 Description = meeting.Description,
                 MeetingTime = meeting.MeetingTime,
                 ExistingPhotoPath = meeting.PhotoPath,
@@ -105,6 +107,7 @@ namespace EventBoost.Areas.Admin.Controllers
                 meeting.Description = vm.Description;
                 meeting.Place = vm.Place;
                 meeting.Title = vm.Title;
+                meeting.Slug = WebUtilities.URLFriendly(vm.Slug);
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     helperService.DeletePhoto(meeting.PhotoPath);

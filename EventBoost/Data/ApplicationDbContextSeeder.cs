@@ -1,4 +1,5 @@
 ﻿using EventBoost.Models;
+using EventBoost.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,14 +74,16 @@ namespace EventBoost.Data
                 db.Meetings.Add(new Meeting()
                 {
                     Title = "English Speaking Club",
+                    Slug=WebUtilities.URLFriendly("English Speaking Club"),
                     Description = "An English Club is a place for language learners to use English in a casual setting. Practising your skills in the classroom is important.",
                     Place = "Route Cafe, Ankara",
                     MeetingTime = DateTime.Now.AddDays(7),
                     PhotoPath = "meeting1.jpg"
-                });
+                });;
                 db.Meetings.Add(new Meeting()
                 {
                     Title = "Environmental Pollution",
+                    Slug = WebUtilities.URLFriendly("Environmental Pollution"),
                     Description = "This conference aims to bring together leading academic scientists, researchers and research scholars to exchange and share their experiences and research results on all aspects of Environmental Pollution, Public Health and Impacts. ",
                     Place = "Congresium",
                     MeetingTime = DateTime.Now.AddDays(30),
@@ -98,6 +101,7 @@ namespace EventBoost.Data
                 db.Meetings.Add(new Meeting()
                 {
                     Title = "Meeting "+i,
+                    Slug = WebUtilities.URLFriendly("Meeting " + i),
                     Description = "Ajgfjklsdfjk sdffjjk  dfjöghjksdfghksdfjlghskl hdfjkghsdjklf ghsdf gjdgh jksdfhkj",
                     Place = "Darl, LA",
                     MeetingTime = DateTime.Now.AddDays(-i),
